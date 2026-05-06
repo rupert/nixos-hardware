@@ -32,12 +32,8 @@ with lib;
           test -z "$dtbCompat" && continue
 
           ${flip (concatMapStringsSep "\n") overlays (o: ''
-            overlayCompat="$(fdtget -t s "${o.dtboFile}" / compatible)"
-
-            # skip incompatible and non-matching overlays
-            if [[ ! "$dtbCompat" =~ "$overlayCompat" ]]; then
-              echo "Skipping overlay ${o.name}: incompatible with $(basename "$dtb")"
-            elif ${
+            # skip non-matching overlays
+            if ${
               if ((o.filter or null) == null) then
                 "false"
               else
